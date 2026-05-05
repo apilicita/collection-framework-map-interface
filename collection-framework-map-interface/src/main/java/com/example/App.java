@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class App {
 	
@@ -35,30 +36,14 @@ public class App {
     	
     	
     	List<String> listadoDeArgumentos = Arrays.asList(args);
-    	
     	listadoDeArgumentos.forEach(System.out::println);
     	
-    	// Creacion del mapa a partir del listado de argumentos Clave(sera nombre),Valor (veces repite)
     	
-    	Map<String,Integer> m = new HashMap<>();
+    	// Creacion del mapa a partir del listado de argumentos
+    	Map<String,Long> m = listadoDeArgumentos.stream().
+    			collect(Collectors.groupingBy(nombre -> nombre,Collectors.counting()));
     	
-    	//Para agregar entradas al mapa m, recorreremos la lista listadoDeArgumentos 
-    	//utilizando una sentencia for mejorada
-    	
-    	//lo busco por clave y luego miro el valor  (Rodrigo,1), (Javi,1) ... (Rodrigo,2) -->
-    	//actualizo el valor , pero la clave no se introduce, la clave no puede estar duplicada
-    	
-    	Integer frecuenciaOcurrencia =null;
-    	
-    	for(String nombre: listadoDeArgumentos) {
-    		 //comprobar si el nombre, clave ya se encuentra en el mapa m
-    		//la primera vez tendra un 1, las siguientes sera +1
-    		frecuenciaOcurrencia=m.get(nombre);
-    		m.put(nombre, frecuenciaOcurrencia == null ? 1: ++frecuenciaOcurrencia);
-    	}
-    	
-    	System.out.println("Mapa resultante:  "+ m);
-    	
+    	System.out.println("Mapa resultante: "+ m);
     	
     	
     }
