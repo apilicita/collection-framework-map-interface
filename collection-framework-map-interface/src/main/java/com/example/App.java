@@ -59,7 +59,7 @@ public class App {
     	m=listadoDeArgumentos.stream().collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
     	System.out.println("Mapa resultante:  "+m);
     	
-    	
+    	//#variante 2 recomendada
     	Map<String,Long> m2 = listadoDeArgumentos.stream().
     			collect(Collectors.groupingBy(nombre -> nombre,Collectors.counting()));
     	
