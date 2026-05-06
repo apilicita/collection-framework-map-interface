@@ -72,7 +72,7 @@ public class App {
     	
     	/* Creacion de listado de empleado */
     	
-    	List<Empleado> empleados = new ArrayList<Empleado>();
+    	List<?extends Persona> listadoGenerico = new ArrayList<>();
     	
     	Empleado emp1 = Empleado.builder()
     			.nombre("Jorge Francisco")
@@ -186,9 +186,24 @@ public class App {
     			.fechaAlta(LocalDate.of(2015,Month.SEPTEMBER,22))
     			.build();
     	
+      	Estudiante estudiante1 = Estudiante.builder()
+    			.nombre("Alex Eduardo")
+    			.primerApellido("Pilicita")
+    			.segundoApellido("Changoluisa")
+    			.genero(Genero.HOMBRE)
+    			.fechaNacimiento(LocalDate.of(1991, Month.MAY, 25))
+    			.totalAsignaturas(10)
+    			.facultad(Facultad.INGENIERIA)
+    			.fechaAltaFacultad(LocalDate.of(2020, Month.JANUARY, 6))
+    			.build();
+    			
     	
-    	empleados = Arrays.asList(emp1,emp2,emp3,emp4,emp5,emp6,emp7,emp8,emp9,emp10);
+    	listadoGenerico = Arrays.asList(emp1,emp2,emp3,emp4,emp5,emp6,emp7,emp8,emp9,emp10,estudiante1);
     	
+      	//add --> es con super y aslist guardarlo en otro parte
+      	//listadoGenerico.add(emp1);
+    	
+  
     	/*Crear una coleccion que agrupe empleados por genero*/
     	//clave: Genero, Valor: Lista Empleados
     	//Grouping --> agrupe por genero (Hombre y mujer)
@@ -207,10 +222,14 @@ public class App {
     	 *
     	 * Concretamente , en este caso , el Collectors.toList() sobra*/
     	
-    	Map<Genero,List<Empleado>> empleadosPorGenero = empleados.stream().
-    			collect(Collectors.groupingBy(Persona::getGenero));
     		
+    	Map<Genero, List<Empleado>> empleadosPorGenero = listadoGenerico.stream()
+    		    .filter(obj -> obj instanceof Empleado)
+    		    .map(obj -> (Empleado) obj)
+    		    .collect(Collectors.groupingBy(Empleado::getGenero));
  
+ 
+
  
     					
     	System.out.println("Empleados por Genero:  " +empleadosPorGenero);
