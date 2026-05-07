@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collector;
@@ -307,6 +308,31 @@ public class App {
      					averagingDouble(e -> e.getSalario().doubleValue()))));
      	
         System.out.println("Listado mujer 2, por fecha alta y salario promedio: " +salarioMedioPorFechaAlta2 );
+        
+        
+        /*Para recorrer un Mapa hay que utilizar una de las tres vistas de colecciones
+         * (Collections View), para especificar si queremos recorrer las claves del mapa
+         * los valores del mapa o todas las entradas del mapa, incluyendo claves y valores
+         * 
+         * 
+         * Como ejemplo: (Primeramente utilizando for mejorado)
+         * 
+         * Recorrer el mapa y mostrar solamente los valores que sean par
+         * 
+         * */
+        
+        
+        for(Entry<String, Long> entry: m.entrySet())
+        {
+        	String k = entry.getKey();
+        	Long v = entry.getValue();
+        	if (v %2 == 0) {
+        		System.out.println(v);
+        		System.out.println(k);
+
+        	}
+        }
+        
         
         
      	
