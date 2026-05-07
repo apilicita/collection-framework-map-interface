@@ -333,6 +333,7 @@ public class App {
         	}
         }
         
+        System.out.println("Recorriendo el mapa m con Operaciones de Agregado");
         
         //Lo mismo pero con operaciones de agregado
         m.entrySet().forEach(entry -> {
@@ -341,8 +342,24 @@ public class App {
            }	
         });
         
+        /* Recorrer el mapa empleadosPorDptoYGenero y mostrar los empleados ordenados segun 
+         * el orden natural por antiguedad, los mas antiguos primero
+         * 
+         * */
         
+        //Primero con for mejorado y despues operaciones de agregado
         
+        for(Map.Entry<Dpto, Map<Genero, List<Empleado>>> entry1: empleadosPorDptoYGenero.entrySet())
+        {
+        	Dpto k=entry1.getKey();
+        	Map<Genero,List<Empleado>> v = entry1.getValue();
+        	
+        	for (Map.Entry<Genero, List<Empleado>> entry2: v.entrySet()) {
+        		System.out.println("Del Dpto:  " + k + ", y del genero: " + entry2.getKey());
+        		System.out.println("Los empleados se muestran a continuacion: " + entry2.getValue());
+        	}
+        	
+        }
      	
     }
 }
