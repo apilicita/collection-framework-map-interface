@@ -3,14 +3,18 @@ package com.example;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 public class App {
 	
@@ -72,8 +76,8 @@ public class App {
     	
     	/* Creacion de listado de empleado */
     	
-    	//List<?extends Persona> listadoGenerico = new ArrayList<>();
-    	List<?super Persona> listadoGenerico = new ArrayList<>();
+    	List<?extends Persona> listadoGenerico = new ArrayList<>();
+    	//List<?super Persona> listadoGenerico = new ArrayList<>();
     	
     	Empleado emp1 = Empleado.builder()
     			.nombre("Jorge Francisco")
@@ -125,7 +129,7 @@ public class App {
     			.primerApellido("Garzon")
     			.segundoApellido("Villar")
     			.genero(Genero.MUJER)
-    			.fechaNacimiento(LocalDate.of(2000, Month.AUGUST, 4))
+    			.fechaNacimiento(LocalDate.of(2001, Month.JUNE, 7))
     			.dpto(Dpto.INFORMATICA)
     			.salario(new BigDecimal(3300.50))
     			.fechaAlta(LocalDate.of(2022,Month.SEPTEMBER,25))
@@ -133,7 +137,7 @@ public class App {
     	
     	
     	Empleado emp6 = Empleado.builder()
-    			.nombre("Francisas")
+    			.nombre("Mariana")
     			.primerApellido("Alvarez")
     			.segundoApellido("Gonzalez")
     			.genero(Genero.MUJER)
@@ -144,7 +148,7 @@ public class App {
     			.build();
     	
     	Empleado emp7 = Empleado.builder()
-    			.nombre("Maricarmen")
+    			.nombre("Mariana")
     			.primerApellido("Becerra")
     			.segundoApellido("Martinez")
     			.genero(Genero.MUJER)
@@ -200,12 +204,14 @@ public class App {
     			
     	
       	//con extends
-    	//listadoGenerico = Arrays.asList(emp1,emp2,emp3,emp4,emp5,emp6,emp7,emp8,emp9,emp10,estudiante1);
+    	listadoGenerico = Arrays.asList(emp1,emp2,emp3,emp4,emp5,emp6,emp7,emp8,emp9,emp10,estudiante1);
+    	
+    	
     	
       	//add con super
-      	listadoGenerico.add(emp1);
-       	listadoGenerico.add(emp2);
-       	listadoGenerico.add(emp3);
+      	//listadoGenerico.add(emp1);
+       	//listadoGenerico.add(emp2);
+       	//listadoGenerico.add(emp3);
          	
   
     	/*Crear una coleccion que agrupe empleados por genero*/
@@ -233,12 +239,76 @@ public class App {
     		    .collect(Collectors.groupingBy(Empleado::getGenero));
  
  
+    	     
 
  
     					
     	System.out.println("Empleados por Genero:  " +empleadosPorGenero);
     	
+    	/* Obtener una coleccion que agrupe empleados por Departamento y Genero
+    	 */
     	
+    	Map<Dpto,Map<Genero,List<Empleado>>> empleadosPorDptoYGenero = listadoGenerico.stream()
+    			.filter(obj -> obj instanceof Empleado)
+    		     .map(obj -> (Empleado) obj)
+    		     .collect(Collectors.groupingBy(Empleado::getDpto,Collectors.groupingBy(Empleado::getGenero)));
+   
+     	System.out.println("Empleados por Departamento y Genero:  " +empleadosPorDptoYGenero);
+        
+     	//Filtro : groupingBy --> genero
+     	//Mapping: eliga un campo concreto Nombre
+    	/* Obtener una coleccion que agrupe nombres de empleados por Genero, 
+    	 * sin que se dupliquen los nombres*/
     	
+     	Map<Genero, Set<String>> nombresPorGenero = listadoGenerico.stream()
+     			.filter(obj -> obj instanceof Empleado)
+     			.map(obj -> (Empleado) obj)
+     			.collect(Collectors.groupingBy(Empleado::getGenero,Collectors.mapping(Empleado::getNombre,
+     					Collectors.toSet())));
+        
+     	System.out.println("Empleados por Genero sin que se dupliquen los nombres:  " +nombresPorGenero);
+     	
+     	
+     	/* Obtener una coleccion que agrupe nombres de empleados, separados por comas,
+     	 * por edad del Empleado */
+     	
+     	Map<Long,String> nombresPorEdad = listadoGenerico.stream()
+     			.filter(obj -> obj instanceof Empleado)
+     			.map(obj -> (Empleado) obj)
+     			.collect(Collectors.groupingBy(emp -> ChronoUnit.YEARS.between(emp.getFechaNacimiento(), 
+     					LocalDate.now()),Collectors.mapping(Empleado::getNombre,
+     							Collectors.joining(","))));
+     	
+     	System.out.println("Listado de empleados , agrupe por nombre , separados por comas y por edad empleado :  " +nombresPorEdad);
+     	
+     	/* Obtener una coleccion que agrupe salario promedio por fecha de alta,solamente para los empleados del genero MUJER */
+     	
+     /*   Map<LocalDate,BigDecimal> salarioPromedioFechaAlta = listadoGenerico.stream()
+        		.filter(obj -> obj instanceof Empleado)
+        		.map(obj -> (Empleado) obj)
+        		.filter(Empleado -> Empleado.getGenero()==Genero.MUJER)
+        		.collect(Collectors.groupingBy(Empleado:: getFechaAlta),
+        				Collectors.mapping(Empleado::getSalario,Collectors.toSet()));*/
+
+     	
+     	Map<LocalDate,Double> salarioMedioPorFechaAlta = listadoGenerico.stream()
+     			.filter(obj -> obj instanceof Empleado e && e.getGenero().equals(Genero.MUJER))
+     			.map(obj -> (Empleado) obj)
+     			.collect(groupingBy(Empleado::getFechaAlta,averagingDouble(e -> e.getSalario().doubleValue())));
+     			
+        		
+        System.out.println("Listado mujer, por fecha alta y salario promedio: " +salarioMedioPorFechaAlta );
+        
+        Map<LocalDate,Map<Genero,Double>> salarioMedioPorFechaAlta2 = listadoGenerico.stream()
+     			.filter(obj -> obj instanceof Empleado e && e.getGenero().equals(Genero.MUJER))
+     			.map(obj -> (Empleado) obj)
+     			.collect(groupingBy(Empleado::getFechaAlta
+     					,groupingBy(Empleado::getGenero,
+     					averagingDouble(e -> e.getSalario().doubleValue()))));
+     	
+        System.out.println("Listado mujer 2, por fecha alta y salario promedio: " +salarioMedioPorFechaAlta2 );
+        
+        
+     	
     }
 }
