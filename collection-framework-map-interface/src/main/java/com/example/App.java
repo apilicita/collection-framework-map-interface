@@ -328,10 +328,18 @@ public class App {
         	Long v = entry.getValue();
         	if (v %2 == 0) {
         		System.out.println(v);
-        		System.out.println(k);
+        		//System.out.println(k);
 
         	}
         }
+        
+        
+        //Lo mismo pero con operaciones de agregado
+        m.entrySet().forEach(entry -> {
+           if (entry.getValue() % 2 == 0) {
+        	   System.out.println(entry.getValue());
+           }	
+        });
         
         
         
