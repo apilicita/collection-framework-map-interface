@@ -72,7 +72,8 @@ public class App {
     	
     	/* Creacion de listado de empleado */
     	
-    	List<?extends Persona> listadoGenerico = new ArrayList<>();
+    	//List<?extends Persona> listadoGenerico = new ArrayList<>();
+    	List<?super Persona> listadoGenerico = new ArrayList<>();
     	
     	Empleado emp1 = Empleado.builder()
     			.nombre("Jorge Francisco")
@@ -198,11 +199,14 @@ public class App {
     			.build();
     			
     	
-    	listadoGenerico = Arrays.asList(emp1,emp2,emp3,emp4,emp5,emp6,emp7,emp8,emp9,emp10,estudiante1);
+      	//con extends
+    	//listadoGenerico = Arrays.asList(emp1,emp2,emp3,emp4,emp5,emp6,emp7,emp8,emp9,emp10,estudiante1);
     	
-      	//add --> es con super y aslist guardarlo en otro parte
-      	//listadoGenerico.add(emp1);
-    	
+      	//add con super
+      	listadoGenerico.add(emp1);
+       	listadoGenerico.add(emp2);
+       	listadoGenerico.add(emp3);
+         	
   
     	/*Crear una coleccion que agrupe empleados por genero*/
     	//clave: Genero, Valor: Lista Empleados
